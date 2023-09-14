@@ -11,4 +11,13 @@ const function2 = () => console.log("Функция 2");
 const function3 = () => console.log("Функция 3");
 const function4 = () => console.log("Функция 4");
 
+// Массив функций
 const arrayFunctions = [function1, function2, function3, function4];
+
+const callFunctions = async (array) => {
+  for (let i = 0; i < array.length; i++) {
+    await array[i]();
+  }
+}
+
+callFunctions(arrayFunctions);
