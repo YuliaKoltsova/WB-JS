@@ -20,4 +20,5 @@ const callFunctions = async (array) => {
   }
 }
 
-callFunctions(arrayFunctions);
+const calledFunctions = callFunctions(arrayFunctions);
+console.log(calledFunctions);
