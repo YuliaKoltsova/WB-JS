@@ -42,4 +42,5 @@ const jsonToString = (obj) => {
   return null;
 }
 
-jsonToString(object);
+const convertedToString = jsonToString(obj);
+console.log(convertedToString);
