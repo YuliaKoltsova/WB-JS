@@ -12,9 +12,10 @@ const getStrangeNumber = (number) => {
   //Суммируем все делители
   const summDivisors = divisors.reduce((summ, number) => summ + number);
   // вывводим в консоль true или false
-  return console.log(summDivisors === number);
+  return summDivisors === number;
 }
 
-getStrangeNumber(6);
-getStrangeNumber(13);
+const isStrangeNumber = getStrangeNumber(6);
+console.log(isStrangeNumber);
+
 
