@@ -7,8 +7,9 @@ let checkPalindrome = (string) => {
   for (let i = normalizeString.length - 1; i >= 0; i--) {
     invertedString += normalizeString[i]; //записываем по одной букве с конца заданной фразы(normalizeString) в пустую строку(invertedString)
   };
-  return console.log(invertedString === normalizeString); // сравниваем строку с фразой наоборот с заданной строкой. 
+  return invertedString === normalizeString; // сравниваем строку с фразой наоборот с заданной строкой. 
   //если они одинаковые, выводим в консоль true, если нет - false;
 }
 
-checkPalindrome("топот");
+const isPalindrom = checkPalindrome("топот");
+console.log(isPalindrom);
