@@ -10,7 +10,7 @@ const arrayPeoples = [
   { name: 'Алина', age: 25 },
 ]
 
-const sortedArray = (array) => {
+const sortArray = (array) => {
   array.sort((x, y) => {
     //Сортируем по возрасту, от меньшего к большему
     if (x.age < y.age) return -1; 
@@ -23,4 +23,5 @@ const sortedArray = (array) => {
   return array;
 };
 
-sortedArray(arrayPeoples);
+const sortedArray = sortArray(arrayPeoples);
+console.log(sortedArray);
