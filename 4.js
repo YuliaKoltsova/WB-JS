@@ -14,17 +14,20 @@ const changeEnding = (count, wordArray) => {
   const twoEndNumbers = positiveNumberString.slice(positiveNumberString.length - 2); //Находим последние 2 числа 
   const endNumbers = positiveNumberString.slice(positiveNumberString.length - 1);//находим последнее число
   if(twoEndNumbers > 10 && twoEndNumbers < 20) { 
-    return console.log(count + " " + wordArray[1])
+    return count + " " + wordArray[1]
   }
 	if(endNumbers > 1 && endNumbers < 5) {
-    return console.log(count + " " + wordArray[0])
+    return count + " " + wordArray[0]
   }
 	if(endNumbers == 1) {
-    return console.log(count + " " + wordArray[2])
+    return count + " " + wordArray[2]
   } else {
-    return console.log(count + " " + wordArray[1])
+    return count + " " + wordArray[1]
   }
 } 
 
-changeEnding(11, word1);
-changeEnding(201, word2);
+const ending1 = changeEnding(11, word1);
+const ending2 = changeEnding(201, word2);
+console.log(ending1);
+console.log(ending2);
+
