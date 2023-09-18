@@ -31,3 +31,5 @@ const ending2 = changeEnding(201, word2);
 console.log(ending1);
 console.log(ending2);
 
+export {changeEnding}; //Добавляет возможность импортировать модуль в другом файле
+
