@@ -2,6 +2,18 @@
 // с помощью одного из геоинформационных сервисов (Яндекс.Карты, ДаДата, GraphHopper), подбирается адрес. 
 // Найденные данные должны отображаться в выпадающем списке, из которого можно выбрать подходящее значение.
 
+/* <html>
+  <head>
+    <title>Прямое геокодирование</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  </head>
+  <body>
+    <input type="text" id="address" placeholder="Введите адрес">
+    <ul id="suggestions"></ul>
+  </body>
+  <script src="/17.js"></script>
+</html> */
+
 // Реализация функции дебаунсинга
 function debounce(fn, delay) {
   let timer = null;
