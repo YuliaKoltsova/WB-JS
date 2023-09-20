@@ -1,0 +1,54 @@
+<!-- Задача: Взаимодействие с формами: Напишите функцию, которая получает данные из формы на веб-странице и выполняет определенные 
+действия с этими данными, например, отправляет их на сервер или отображает всплывающее окно с результатами. -->
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <title>Работа с формами</title>
+</head>
+
+<body>
+  <main>
+    <form class="form" method="post" enctype="multipart/form-data" action="https://29.javascript.pages.academy/kekstagram">
+      <ul>
+        <li> 
+          <label>Имя
+            <input type="text" name="name">
+          </label>
+        </li>
+        <li> 
+          <label>Фамилия
+            <input type="text" name="surname">
+          </label>
+        </li>
+        <li> 
+          <label>Дата рождения
+            <input type="date" name="date-of-birth">
+          </label>
+        </li>
+      </ul>
+      <button type="submit">Отправить</button>
+    </form>
+  </main>
+  <script>
+    const mainForm = document.getElementById("form"); // Находим форму
+    mainForm.addEventListener("submit", (evt) => { // При отправке формы(нажатию на кнопку "Отправить")
+      evt.preventDefault(); // Отменяем отправку формы по умолчанию
+      const formData = new FormData(mainForm); // Создаём объект FormData, передаём в него элемент формы
+      // Отправляем данные на сервер
+      fetch("#", { // в скобках указать url, куда отправить форму
+        method: 'POST', // метод post, та как отправляем данные, а не получаем(get)
+        body: formData, //о Отправляет данные нашей формы
+      })
+      // Обрабатываем ответ от сервера
+      .then((response) => { // Если все ок, то выводим в консоль сообщение
+        console.log("Успешно!");
+      })
+      .catch((error) => { // Если возвращается ошибка, то выводим в консоль сообщение об ошибке
+        console.error("Ошибка!");
+      });
+    });
+  </script>
+</body>
+</html>
