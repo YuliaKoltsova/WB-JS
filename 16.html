@@ -1,0 +1,23 @@
+<!-- Задача на модули и использование внешних библиотек: напишите модуль, который экспортирует функцию для работы с датами. 
+Внутри модуля используйте внешнюю библиотеку Moment.js для удобной работы с датами. -->
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <!-- Подключаем внешнюю библиотеку Moment.js -->
+  <script src="node_modules/moment/moment.js"></script>
+  <title>Работа с датами Moment.js</title>
+</head>
+<body>
+  <main>
+  </main>
+  <script>  
+    // Выводим в консоль текущие время и дату
+    const getCurrentTimeDate = () => { 
+      const now = moment();
+      console.log(now.format('dddd, MMMM DD YYYY, h:mm:ss'));
+    }
+    getCurrentTimeDate();
+  </script>
+</body>
