@@ -1,0 +1,46 @@
+<!-- Задача: Создать и добавить элемент с использованием шаблонов: Напишите функцию, которая создает новый элемент с использованием 
+шаблонов (например, с помощью тега <template>) и добавляет его в DOM. -->
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <title>Шаблон</title>
+</head>
+  
+<body>
+  <main>
+    <section class="pictures container">
+      <h2 class="pictures__title  visually-hidden">Фотографии других пользователей</h2>
+    </section>
+  </main>
+  <!-- Шаблон изображения случайного пользователя -->
+  <template id="picture">
+    <div class="picture">
+      <a href="#">
+        <img class="picture__img" src="" width="182" height="182" alt="Случайная фотография">
+      </a>
+      <div class="picture__info">
+        <p>Количетсво комментариев:<span class="picture__comments"></span></p>
+        <p>Количетсво лайков: <span class="picture__likes"></span></p>
+      </div>
+    </div>
+  </template>
+  <script>
+    const allPostsList = document.querySelector('.pictures'); // Ищем в разметке куда будем вставлять фотографии
+    const postTemplate = document.getElementById('picture').content.querySelector('.picture'); // Ищем шаблон в разметке
+    // Склонируем шаблон и вставим в нужное место на странице, добавим данные, полученные с сервера
+    const createMiniaturePosts = (url, description, likes, comments) => {
+      const postElement = postTemplate.cloneNode(true); // Клонируем шаблон
+      postElement.querySelector('.picture__img').src = url; // Адрес изображения url подставьте как атрибут src изображения
+      postElement.querySelector('.picture__img').alt = description; // Описание изображения description подставьте в атрибут alt изображения.
+      postElement.querySelector('.picture__likes').textContent = likes; // Количество лайков likes выведите в блок .picture__likes.
+      postElement.querySelector('.picture__comments').textContent = comments; // Количество комментариев comments выведите в блок .picture__comments.
+      allPostsList.append(postElement); //Добавляем на страницу в нужное место заполненный шаблон фотографии случайного пользователя
+    }
+    // Создаем посты с фото 
+    createMiniaturePosts("./img/cat.jpg", "Кот", 555, 100); 
+    createMiniaturePosts("./img/cat.jpg", "Кот2", 123, 50);
+  </script>
+</body>
+</html>
