@@ -1,0 +1,35 @@
+<!-- Разработайте страницу, отображающую таблицу с данными. Данные необходимо подгружать из этого источника.
+Требования:
+1. данные должны загружаться при загрузке страницы
+2. необходимо реализовать сортировку по убыванию и по возрастания для всех колонок
+3. необходимо реализовать клиентскую пагинацию (50 элементов на странице) -->
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <title>Прямое геокодирование</title>
+<script>
+  // Получаем данные по ссылке
+const URL = 'http://www.filltext.com/?rows=1000&fname=%7BfirstName%7D&lname=%7BlastName%7D&tel=%7Bphone%7Cformat%7D&address=%7BstreetAddress%7D&city=%7Bcity%7D&state=%7BusState%7Cabbr%7D&zip=%7Bzip%7D&pretty=true';
+
+const getData = async () => { // Создаем асинхронную функцию
+  try {
+    const response = await fetch(URL); // Дожидаемся загрузки данных из ссылки
+    if (!response.ok) { // Проверяем, если запрос прошел не успешно, то показываем ошибку
+      throw new Error();
+    }
+    return response.json(); // Если запрос прошел успешно, то декодируем ответ в JSON
+  } catch { // Если не получилось сделать запрос по ссылке/к серверу, то выдаем ошибку
+    throw new Error("Ошибка");
+  }
+};
+
+const data = getData(); // полученные данные сохраняем в переменную
+
+</script>
+</head>
+<body>
+
+</body>
+</html>
