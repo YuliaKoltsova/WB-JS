@@ -8,28 +8,359 @@
 <html lang="ru">
 <head>
   <meta charset="utf-8">
-  <title>Прямое геокодирование</title>
-<script>
-  // Получаем данные по ссылке
-const URL = 'http://www.filltext.com/?rows=1000&fname=%7BfirstName%7D&lname=%7BlastName%7D&tel=%7Bphone%7Cformat%7D&address=%7BstreetAddress%7D&city=%7Bcity%7D&state=%7BusState%7Cabbr%7D&zip=%7Bzip%7D&pretty=true';
-
-const getData = async () => { // Создаем асинхронную функцию
-  try {
-    const response = await fetch(URL); // Дожидаемся загрузки данных из ссылки
-    if (!response.ok) { // Проверяем, если запрос прошел не успешно, то показываем ошибку
-      throw new Error();
-    }
-    return response.json(); // Если запрос прошел успешно, то декодируем ответ в JSON
-  } catch { // Если не получилось сделать запрос по ссылке/к серверу, то выдаем ошибку
-    throw new Error("Ошибка");
-  }
-};
-
-const data = getData(); // полученные данные сохраняем в переменную
-
-</script>
+  <title>Таблица</title>
 </head>
 <body>
+  <div class="content">
+    <div class="sort-name">
+      <button type="button" class="button-name-decrease">По убыванию имени</button>
+      <button type="button" class="button-name-increase">По возрастанию имени</button>
+    </div>
+    <div class="sort-surname">
+      <button type="button" class="button-surname-decrease">По убыванию фамилии</button>
+      <button type="button" class="button-surname-increase">По возрастанию фамилии</button>
+    </div>
+    <div class="sort-tel">
+      <button type="button" class="button-tel-decrease">По убыванию номера телефона</button>
+      <button type="button" class="button-tel-increase">По возрастанию номера телефона</button>
+    </div>
+    <div class="sort-address">
+      <button type="button" class="button-address-decrease">По убыванию адреса</button>
+      <button type="button" class="button-address-increase">По возрастанию адреса</button>
+    </div>
+    <div class="sort-city">
+      <button type="button" class="button-city-decrease">По убыванию города</button>
+      <button type="button" class="button-city-increase">По возрастанию города</button>
+    </div>
+    <div class="sort-state">
+      <button type="button" class="button-state-decrease">По убыванию поля state</button>
+      <button type="button" class="button-state-increase">По возрастанию поля state</button>
+    </div>
+    <div class="sort-zip">
+      <button type="button" class="button-zip-decrease">По убыванию поля zip</button>
+      <button type="button" class="button-zip-increase">По возрастанию поля zip</button>
+    </div>
+    <table class="table">
+    </table>
+  </div>
 
+  <template id="rowTable">
+    <!-- Строка таблицы с ячейками -->
+    <tr class="row-table"> 
+      <th class="cell-fname"></th>
+      <th class="cell-lname"></th>
+      <th class="cell-tel"></th>
+      <th class="cell-address"></th>
+      <th class="cell-city"></th>
+      <th class="cell-state"></th>
+      <th class="cell-zip"></th>
+    </tr>
+  </template>
+
+  <script>
+    // Получаем данные по ссылке
+  const URL = 'http://www.filltext.com/?rows=1000&fname=%7BfirstName%7D&lname=%7BlastName%7D&tel=%7Bphone%7Cformat%7D&address=%7BstreetAddress%7D&city=%7Bcity%7D&state=%7BusState%7Cabbr%7D&zip=%7Bzip%7D&pretty=true';
+
+  const getData = async () => { // Создаем асинхронную функцию
+    try {
+      const response = await fetch(URL); // Дожидаемся загрузки данных из ссылки
+      if (!response.ok) { // Проверяем, если запрос прошел не успешно, то показываем ошибку
+        throw new Error();
+      }
+      const data = await response.json(); 
+      return data;// Если запрос прошел успешно, то декодируем ответ в JSON
+    } catch { // Если не получилось сделать запрос по ссылке/к серверу, то выдаем ошибку
+      throw new Error("Ошибка");
+    }
+  };
+
+    //функция создания строки в таблице и заполнения ее данными
+    const createRow = (file) => {
+    const table = document.querySelector(".table"); // Находим таблицу, куда будем добавлять новые строки
+    const rowTemplate = document.querySelector("#rowTable").content.querySelector(".row-table"); // Шаблон строки таблицы
+           // Удаляем загруженные ранее строки
+    const unnecessaryRows = table.querySelectorAll('.row-table');
+    unnecessaryRows.forEach((element) => element.remove());
+    file.forEach(({fname, lname, tel, address, city, state, zip}) => {
+        const rowElement = rowTemplate.cloneNode(true); // Клонируем шаблон строки
+        // Заолняем ячейки
+        rowElement.querySelector(".cell-fname").textContent = fname;
+        rowElement.querySelector(".cell-lname").textContent = lname;
+        rowElement.querySelector(".cell-tel").textContent = tel;
+        rowElement.querySelector(".cell-address").textContent = address;
+        rowElement.querySelector(".cell-city").textContent = city;
+        rowElement.querySelector(".cell-state").textContent = state;
+        rowElement.querySelector(".cell-zip").textContent = zip;
+        table.append(rowElement); // Добавляем строку в таблицу
+      });
+  }
+
+  //Изначальная таблица(без сортировок)
+  const showTable = () => {
+    getData().then(data => createRow(data))
+  }
+
+  showTable();
+
+// СОРТИРОВКА ПО ИМЕНИ
+  //Сортировка по убыванию имени
+  const sortedDecreaseName = () => {
+    getData() //Получаем данные из json
+    .then(data => { //Сортируем
+      const sortData = data.sort(function(a, b) {
+        return ((a.fname === b.fname) ? 0 : ((a.fname > b.fname) ? 1 : -1));
+      })
+      return sortData
+    })
+    .then(result => {
+      createRow(result); //выводим отсортированную таблицу
+    })
+  }
+  //Сортировка по возрастанию имени
+  const sortedIncreaseName = () => {
+    getData().then(data => {
+      const sortData = data.sort(function(a, b) {
+      return ((a.fname === b.fname) ? 0 : ((a.fname < b.fname) ? 1 : -1));
+    })
+    return sortData
+  })
+  .then(result => {
+      createRow(result); //выводим отсортированную таблицу
+    })
+  }
+
+  // СОРТИРОВКА ПО ФАМИЛИИ
+  //Сортировка по убыванию фамилии
+    const sortedDecreaseSurname = () => {
+    getData() //Получаем данные из json
+    .then(data => { //Сортируем
+      const sortData = data.sort(function(a, b) {
+        return ((a.lname === b.lname) ? 0 : ((a.lname > b.lname) ? 1 : -1));
+      })
+      return sortData
+    })
+    .then(result => {
+      createRow(result); //выводим отсортированную таблицу
+    })
+  }
+  //Сортировка по возрастанию фамилии
+  const sortedIncreaseSurname = () => {
+    getData().then(data => {
+      const sortData = data.sort(function(a, b) {
+      return ((a.lname === b.lname) ? 0 : ((a.lname < b.lname) ? 1 : -1));
+    })
+    return sortData
+  })
+  .then(result => {
+      createRow(result); //выводим отсортированную таблицу
+    })
+  }
+
+  // СОРТИРОВКА ПО ТЕЛЕФОНУ
+//Сортировка по убыванию номера телефона
+const sortedDecreaseTel = () => {
+    getData() //Получаем данные из json
+    .then(data => { //Сортируем
+      const sortData = data.sort(function(a, b) {
+        return ((a.tel === b.tel) ? 0 : ((a.tel < b.tel) ? 1 : -1));
+      })
+      return sortData
+    })
+    .then(result => {
+      createRow(result); //выводим отсортированную таблицу
+    })
+  }
+  //Сортировка по возрастанию номера телефона
+  const sortedIncreaseTel = () => {
+    getData().then(data => {
+      const sortData = data.sort(function(a, b) {
+      return ((a.tel === b.tel) ? 0 : ((a.tel > b.tel) ? 1 : -1));
+    })
+    return sortData
+  })
+  .then(result => {
+      createRow(result); //выводим отсортированную таблицу
+    })
+  }
+
+  // СОРТИРОВКА ПО АДРЕСУ
+  //Сортировка по убыванию адреса
+const sortedDecreaseAdress = () => {
+    getData() //Получаем данные из json
+    .then(data => { //Сортируем
+      const sortData = data.sort(function(a, b) {
+        return ((a.address === b.address) ? 0 : ((a.address < b.address) ? 1 : -1));
+      })
+      return sortData
+    })
+    .then(result => {
+      createRow(result); //выводим отсортированную таблицу
+    })
+  }
+  //Сортировка по возрастанию адреса
+  const sortedIncreaseAdress = () => {
+    getData().then(data => {
+      const sortData = data.sort(function(a, b) {
+      return ((a.address === b.address) ? 0 : ((a.address > b.address) ? 1 : -1));
+    })
+    return sortData
+  })
+  .then(result => {
+      createRow(result); //выводим отсортированную таблицу
+    })
+  }
+
+  // СОРТИРОВКА ПО ГОРОДУ
+  //Сортировка по убыванию города
+  const sortedDecreaseCity = () => {
+    getData() //Получаем данные из json
+    .then(data => { //Сортируем
+      const sortData = data.sort(function(a, b) {
+        return ((a.city === b.city) ? 0 : ((a.city > b.city) ? 1 : -1));
+      })
+      return sortData
+    })
+    .then(result => {
+      createRow(result); //выводим отсортированную таблицу
+    })
+  }
+  //Сортировка по возрастанию города
+  const sortedIncreaseCity = () => {
+    getData().then(data => {
+      const sortData = data.sort(function(a, b) {
+      return ((a.city === b.city) ? 0 : ((a.city < b.city) ? 1 : -1));
+    })
+    return sortData
+  })
+  .then(result => {
+      createRow(result); //выводим отсортированную таблицу
+    })
+  }
+  
+    // СОРТИРОВКА ПО ПОЛЮ STATE
+  //Сортировка по убыванию поля state
+  const sortedDecreaseState = () => {
+    getData() //Получаем данные из json
+    .then(data => { //Сортируем
+      const sortData = data.sort(function(a, b) {
+        return ((a.state === b.state) ? 0 : ((a.state > b.state) ? 1 : -1));
+      })
+      return sortData
+    })
+    .then(result => {
+      createRow(result); //выводим отсортированную таблицу
+    })
+  }
+  //Сортировка по возрастанию поля state
+  const sortedIncreaseState = () => {
+    getData().then(data => {
+      const sortData = data.sort(function(a, b) {
+      return ((a.state === b.state) ? 0 : ((a.state < b.state) ? 1 : -1));
+    })
+    return sortData
+  })
+  .then(result => {
+      createRow(result); //выводим отсортированную таблицу
+    })
+  }
+  
+
+      // СОРТИРОВКА ПО ПОЛЮ ZIP
+  //Сортировка по убыванию поля state
+  const sortedDecreaseZip = () => {
+    getData() //Получаем данные из json
+    .then(data => { //Сортируем
+      const sortData = data.sort(function(a, b) {
+        return ((a.zip === b.zip) ? 0 : ((a.zip > b.zip) ? 1 : -1));
+      })
+      return sortData
+    })
+    .then(result => {
+      createRow(result); //выводим отсортированную таблицу
+    })
+  }
+  //Сортировка по возрастанию поля state
+  const sortedIncreaseZip = () => {
+    getData().then(data => {
+      const sortData = data.sort(function(a, b) {
+      return ((a.zip === b.zip) ? 0 : ((a.zip < b.zip) ? 1 : -1));
+    })
+    return sortData
+  })
+  .then(result => {
+      createRow(result); //выводим отсортированную таблицу
+    })
+  }
+  
+  // Отображние таблицы, отсортированной по имени
+const buttonNameDecrease = document.querySelector(".button-name-decrease");
+buttonNameDecrease.addEventListener("click", (evt) => {
+  sortedDecreaseName();
+})
+const buttonNameIncrease = document.querySelector(".button-name-increase");
+buttonNameIncrease.addEventListener("click", (evt) => {
+  sortedIncreaseName();
+})
+
+// Отображние таблицы, отсортированной по фамилии
+const buttonSurnameDecrease = document.querySelector(".button-surname-decrease");
+buttonSurnameDecrease.addEventListener("click", (evt) => {
+  sortedDecreaseSurname();
+})
+const buttonSurnameIncrease = document.querySelector(".button-surname-increase");
+buttonSurnameIncrease.addEventListener("click", (evt) => {
+  sortedIncreaseSurname();
+})
+
+// Отображние таблицы, отсортированной по телефону
+const buttonTelDecrease = document.querySelector(".button-tel-decrease");
+buttonTelDecrease.addEventListener("click", (evt) => {
+  sortedDecreaseTel();
+})
+const buttonTelIncrease = document.querySelector(".button-tel-increase");
+buttonTelIncrease.addEventListener("click", (evt) => {
+  sortedIncreaseTel();
+})
+
+// Отображние таблицы, отсортированной по адресу
+const buttonAdressDecrease = document.querySelector(".button-address-decrease");
+buttonAdressDecrease.addEventListener("click", (evt) => {
+  sortedDecreaseAdress();
+})
+const buttonAdressIncrease = document.querySelector(".button-address-increase");
+buttonAdressIncrease.addEventListener("click", (evt) => {
+  sortedIncreaseAdress();
+})
+
+// Отображние таблицы, отсортированной по городу
+const buttonCityDecrease = document.querySelector(".button-city-decrease");
+buttonCityDecrease.addEventListener("click", (evt) => {
+  sortedDecreaseCity();
+})
+const buttonCityIncrease = document.querySelector(".button-city-increase");
+buttonCityIncrease.addEventListener("click", (evt) => {
+  sortedIncreaseCity();
+})
+
+// Отображние таблицы, отсортированной по полю state
+const buttonStateDecrease = document.querySelector(".button-state-decrease");
+buttonStateDecrease.addEventListener("click", (evt) => {
+  sortedDecreaseState();
+})
+const buttonStateIncrease = document.querySelector(".button-state-increase");
+buttonStateIncrease.addEventListener("click", (evt) => {
+  sortedIncreaseState();
+})
+
+// Отображние таблицы, отсортированной по полю state
+const buttonZipDecrease = document.querySelector(".button-zip-decrease");
+buttonZipDecrease.addEventListener("click", (evt) => {
+  sortedDecreaseZip();
+})
+const buttonZipIncrease = document.querySelector(".button-zip-increase");
+buttonZipIncrease.addEventListener("click", (evt) => {
+  sortedIncreaseZip();
+})
+  </script>
 </body>
 </html>
