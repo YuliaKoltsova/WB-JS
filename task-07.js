@@ -14,9 +14,9 @@ const function4 = () => console.log("Функция 4");
 // Массив функций
 const arrayFunctions = [function1, function2, function3, function4];
 
-const callFunctions = async (array) => {
-  for (let i = 0; i < array.length; i++) {
-    await array[i]();
+const callFunctions = async (array) => { // создаем асинхронную функцию. в которую передаем массив функций
+  for (let i = 0; i < array.length; i++) { // пока i меньше, чем количество функций в массиве функций, 
+    await array[i](); // вызываем каждую функцию и дожидаемся ее завершения
   }
 }
 
