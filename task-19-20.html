@@ -1,0 +1,107 @@
+<!--19. Реализовать виджет, отображающий список постов из любого паблика в VK (подойдет любой паблик, где постов очень много). 
+Виджет должен иметь фиксированные размеры и возможность прокрутки. При прокрутке содержимого виджета до конца должны подгружаться новые посты. 
+Необходимо реализовать возможность кэширования уже загруженных данных: если пользователь закрыл страницу, а потом снова открыл ее, виджет должен отображать 
+все загруженные ранее данные (новые данные должны подгружаться из учетом уже загруженных ранее).
+
+При переполнении localStorage, данные, загруженные последними должны вытеснять данные загруженные первыми. -->
+
+<!-- 20. Реализовать функцию подсчета объема памяти занимаемого данными в LocalStorage для предыдущей задачи. При изменении данных в localStorage в консоль должен выводиться 
+объем занятой памяти / максимальный размер хранилища. -->
+
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Виджет VK</title>
+</head>
+<body>
+  <div class="widget" id="widget" style="width: 300px; height: 500px; overflow-y: scroll; border: 1px solid #ccc;"></div>
+  <script>
+    // Метод wall.get. Информация отсюда: https://dev.vk.com/ru/method/wall.get
+    // Инициализация переменных
+    let offset = 0; // С какого поста начинается загрузка
+    const count = 10; // Количество постов для загрузки за один раз
+    const groupId = '#'; // ID группы VK 
+    const accessToken = 'YOUR_ACCESS_TOKEN'; // Токен доступа - заменить на реальный! (самой реализовать получение доступа не получилось)
+
+// Функция для получения постов из VK
+const fetchPosts = async (offset, count) => {
+  const url = `https://api.vk.com/method/wall.get?owner_id=-${groupId}&offset=${offset}&count=${count}&access_token=${accessToken}&v=5.130`;
+  const response = await fetch(url); // Дожидаемся получения данных 
+  const data = await response.json(); // преобразуем в JSON
+  return data.response.items;
+}
+
+// Функция для отображения постов
+const displayPosts = (posts) => {
+  const widget = document.getElementById('widget'); //Находим место на странице, куда будем вставлять посты
+  posts.forEach(post => { 
+    const postElement = document.createElement('div'); // Создаем div
+    postElement.innerHTML = post.text; // Задаем содержимое div'а
+    widget.appendChild(postElement); // добавляем div на страницу
+  });
+}
+
+// Функция для кэширования постов в localStorage
+const cachePosts = (posts) => {
+  const cachedPosts = JSON.parse(localStorage.getItem('vk_posts')); // получаем данные по ключу vk_posts
+  const newCache = [...cachedPosts, ...posts]; // Сохраняем в переменную newCache все cachedPosts и posts
+  localStorage.setItem('vk_posts', JSON.stringify(newCache)); // сохраняем пару ключ/значение
+}
+
+// Функция для подсчета объема памяти в localStorage
+const calculateStorageSize = () => {
+  const allStrings = localStorage.getItem('vk_posts'); // получаем данные по ключу vk_posts
+  const size = new Blob([allStrings]).size; 
+  const maxSize = 5 * 1024 * 1024; // 5MB - максимальный размер localStorage(источник: Google)
+  console.log(`Memory used: ${size} / ${maxSize}`);
+}
+
+// Обработчик прокрутки
+document.getElementById('widget').addEventListener('scroll', async function(e) { // Вещаем на виджет обработчик событий по скроллу, 
+  const element = e.target;
+  if (element.scrollHeight - element.scrollTop === element.clientHeight) { // Следующее выражение возвращает true, если элемент был прокручен до конца, false если это не так
+    const newPosts = await fetchPosts(offset, count); // Дожидаемся ответа
+    displayPosts(newPosts); // Отображаем новый пост
+    cachePosts(newPosts); // обновляем кэш
+    calculateStorageSize(); // пересчитываем объем localStorage
+    offset += count; // Изменяем значение начального поста, на количество отображенных постов
+  }
+});
+
+// Инициализация виджета
+const init = async () =>  {
+  const cachedPosts = JSON.parse(localStorage.getItem('vk_posts')); // получаем 
+  if (cachedPosts.length > 0) { // если количество постов больше 0
+    displayPosts(cachedPosts); // то отображаем их на странице
+    offset = cachedPosts.length; // номер поста, с которого начинется загрузка изменяем на количество отрисованных на странице постов
+  }
+  const newPosts = await fetchPosts(offset, count); // Дожидаемся ответа 
+  displayPosts(newPosts); // Отображаем новый пост
+  cachePosts(newPosts);  // обновляем кэш
+  calculateStorageSize(); // пересчитываем объем localStorage
+  offset += count; // Изменяем значение начального поста, на количество отображенных постов
+};
+
+init();
+  </script>
+</body>
+</html>
+
+
+<!-- РЕАЛИЗАЦИЯ ЗАДАНИЯ 19 С ВИДЖЕТОМ ОТ VK https://dev.vk.com/ru/widgets/group-->
+<!-- <!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Виджет VK</title>
+  <script type="text/javascript" src="https://vk.com/js/api/openapi.js?168"></script>
+</head>
+<body>
+  <div id="vk_groups"></div>
+  <script type="text/javascript">
+    VK.Widgets.Group("vk_groups", {mode: 4, wide: 1, height: 700, color1: "FFFFFF", color2: "000000", color3: "5181B8"}, 22822305);
+  </script>
+</body>
+</html> -->
