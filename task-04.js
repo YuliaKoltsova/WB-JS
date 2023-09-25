@@ -13,16 +13,17 @@ const changeEnding = (count, wordArray) => {
   positiveNumberString = Math.abs(count).toString();  // делаем число положительным(на случай если придет отрицательное)
   const twoEndNumbers = positiveNumberString.slice(positiveNumberString.length - 2); //Находим последние 2 числа 
   const endNumbers = positiveNumberString.slice(positiveNumberString.length - 1);//находим последнее число
-  if(twoEndNumbers > 10 && twoEndNumbers < 20) { 
-    return count + " " + wordArray[1]
+  // Распределяем окончания слов соответственно числам
+  if(twoEndNumbers > 10 && twoEndNumbers < 20) { // если последние 2 числа больше 10 и меньше 20, то
+    return count + " " + wordArray[1] // добавяем слово во множ. числе и род. падеже (пример, 20 сообщений)
   }
-	if(endNumbers > 1 && endNumbers < 5) {
-    return count + " " + wordArray[0]
+	if(endNumbers > 1 && endNumbers < 5) { // если последняя цифра в числе больше 1 и меньше 5, то
+    return count + " " + wordArray[0] // добавляем слово в ед. числе и род. падеже (пример, 3 сообщения)
   }
-	if(endNumbers == 1) {
-    return count + " " + wordArray[2]
-  } else {
-    return count + " " + wordArray[1]
+	if(endNumbers == 1) { // если последняя цифра в числе 1, то 
+    return count + " " + wordArray[2] // добавляем слово в ед.числе и имен. пажеде (пример, 1 сообщение)
+  } else { // если все вышеперечисленные варианты не подощли, то
+    return count + " " + wordArray[1] // добавляем слово во множ. числе и род. падеже (пример, 78 сообщений)
   }
 } 
 
